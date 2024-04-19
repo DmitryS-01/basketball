@@ -42,7 +42,7 @@ async def message_handler(message: Message) -> None:
     user_message = message.text
     user_dice = message.dice
 
-    if '/my_stats' in user_message:
+    if not user_dice and 'my_stats' in user_message:
         try:
             tries, points = data(user_id)
             hit_percentage = f'Процент попаданий - {round((points / tries) * 100, 2)}% !' if tries >= 15 else \
