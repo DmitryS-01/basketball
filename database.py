@@ -1,7 +1,6 @@
 import sqlite3
 import os
 
-
 # -------------------
 # создаем базы данных
 # -------------------
@@ -21,9 +20,9 @@ def users_table_creation():
     with sqlite3.connect(stats_db) as db:
         cursor = db.cursor()
         cursor.execute("""CREATE TABLE IF NOT EXISTS users(
-                       user_id TEXT,
-                       hits INT,
-                       tries INT
+                       user_id INT,
+                       tries INT,
+                       hits INT
                        )""")
         db.commit()
 
@@ -35,7 +34,6 @@ def users_table_creation():
 
 # новый пользователь, добавляем его в общую базу
 def new_user(user_id):
-    username_tg = f'@{user_id}' if user_id is not None else None
     with sqlite3.connect(stats_db) as db:
         cursor = db.cursor()
         cursor.execute("""SELECT user_id 
@@ -45,7 +43,7 @@ def new_user(user_id):
         already_exists = cursor.fetchone()
         if already_exists is None:
             cursor.execute("""INSERT INTO users
-                           (chat_id, user_id, hits, tries) 
+                           (user_id, tries, hits) 
                            VALUES(?, ?, ?)""",
                            [user_id, 0, 0])
         db.commit()
@@ -55,19 +53,16 @@ def new_user(user_id):
 def new_shot(user_id, hit):
     with sqlite3.connect(stats_db) as db:
         cursor = db.cursor()
-        cursor.execute(f"""SELECT tries, hits
-                       FROM users
-                       WHERE user_id = ?"""
+        cursor.execute("""SELECT tries, hits
+                               FROM users
+                               WHERE user_id = ?""",
                        [user_id])
-        tries, hits = cursor.fetchall()
-    with sqlite3.connect(stats_db) as db:
-        cursor = db.cursor()
+        tries, hits = cursor.fetchall()[0]
         cursor.execute("""UPDATE users
-                       SET (hits, tries) = (?, ?)
+                       SET (tries, hits) = (?, ?)
                        WHERE user_id = ?""",
-                       [hits + 1 if hit else hits, tries + 1, user_id])
+                       [tries + 1, hits + 1 if hit else hits, user_id])
         db.commit()
-
 
 
 # ----------------------------
@@ -79,14 +74,13 @@ def new_shot(user_id, hit):
 def data(user_id):
     with sqlite3.connect(stats_db) as db:
         cursor = db.cursor()
-        cursor.execute("""SELECT hits, tries
+        cursor.execute("""SELECT tries, hits
                        FROM users
                        WHERE user_id = ?""",
                        [user_id])
-        users = cursor.fetchall()
-    users_tuple = tuple(user[0] for user in users)
-    return users_tuple
+        stats = cursor.fetchall()
+    return stats
 
 
 if __name__ == '__main__':
-    pass
+    users_table_creation()
