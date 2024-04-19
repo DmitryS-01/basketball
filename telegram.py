@@ -67,7 +67,7 @@ async def message_handler(message: Message) -> None:
             new_user(user_id)
             new_shot(user_id, int(score in [4, 5]))
 
-            await asyncio.sleep(3)
+            await asyncio.sleep(5)
             if score in [4, 5]:
                 try:
                     await message.reply(choice(its_a_hit))
