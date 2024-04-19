@@ -70,8 +70,7 @@ async def message_handler(message: Message) -> None:
             await asyncio.sleep(3)
             if score in [4, 5]:
                 try:
-                    if random_num():
-                        await message.reply(choice(its_a_hit))
+                    await message.reply(choice(its_a_hit))
                 except Exception as e:
                     print(f'{e}')
             else:
