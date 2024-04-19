@@ -1,10 +1,8 @@
-from config import *
 from telegram import *
 from database import *
 
 
-users_table_creation()
-
-
 if __name__ == "__main__":
+    print('  ( ! )  Бот запущен')
+    users_table_creation()
     asyncio.run(main())

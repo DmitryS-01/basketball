@@ -79,7 +79,7 @@ def data(user_id):
                        WHERE user_id = ?""",
                        [user_id])
         stats = cursor.fetchall()
-    return stats
+    return stats[0]
 
 
 if __name__ == '__main__':
