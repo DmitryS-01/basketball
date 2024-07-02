@@ -66,6 +66,7 @@ async def cmd_start(message: Message) -> None:
                               'Это все доступные на данный момент функции, но умения бота непрерывно совершенствуются! '
                               'Приятного пользования, БРО! 👊🏿👨🏿‍🦰',
                          parse_mode='HTML')
+    await message.answer(text='🏀')
     tg_username = message.from_user.username if message.from_user.username is not None else ''
     new_user(tg_id=message.from_user.id, tg_username=tg_username, users_name=message.from_user.full_name)
 
@@ -297,7 +298,7 @@ async def basketball_msg(message: Message, state: FSMContext):
             update_data(tg_id=message.from_user.id, column_name='hit_rate',
                         new_value=round(current_hits / (current_tries + 1) * 100, 2))
 
-        await asyncio.sleep(5)
+        await asyncio.sleep(4)
 
         if message.dice.value in [4, 5]:
             await message.react([ReactionTypeEmoji(emoji=random.choice(scored_emoji))])
@@ -309,7 +310,6 @@ async def basketball_msg(message: Message, state: FSMContext):
         await state.clear()
         await cooldown_msg.delete()
         await cmd_users_stats(message=message)
-
     else:
         await message.reply(text='Это ты не ко мне, я по баскетболу 😎\n'
                                  'Отправь "🏀", чтобы совершить бросок!')
