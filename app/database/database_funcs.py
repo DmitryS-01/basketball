@@ -1,5 +1,7 @@
 import sqlite3
 
+from typing import NamedTuple
+
 
 # -------------------
 # создаем базы данных
@@ -46,16 +48,16 @@ def new_user(tg_id: int, tg_username: str, users_name: str) -> None:
                            VALUES(?, ?, ?, ?, ?, ?, ?, ?)""",
                            [tg_id, tg_username, 0, 0, 0, users_name, 1, ''])
         else:
-            update_data(tg_id=tg_id, value_name='tg_username', new_value=tg_username)
+            update_data(tg_id=tg_id, column_name='tg_username', new_value=tg_username)
         db.commit()
 
 
 # изменение какого-либо значения
-def update_data(tg_id: int, value_name: str, new_value: str or int) -> None:
+def update_data(tg_id: int, column_name: str, new_value: str or int) -> None:
     with sqlite3.connect(users_db) as db:
         cursor = db.cursor()
         cursor.execute(f"""UPDATE users_data
-                       SET {value_name} = ?
+                       SET {column_name} = ?
                        WHERE tg_id = ?""",
                        [new_value, tg_id])
         db.commit()
@@ -67,10 +69,10 @@ def update_data(tg_id: int, value_name: str, new_value: str or int) -> None:
 
 
 # данные пользователя
-def get_data(tg_id: int, value_name: str) -> int or str:
+def get_data(tg_id: int, column_name: str) -> int | str:
     with sqlite3.connect(users_db) as db:
         cursor = db.cursor()
-        cursor.execute(f"""SELECT {value_name}
+        cursor.execute(f"""SELECT {column_name}
                        FROM users_data
                        WHERE tg_id = ?""",
                        [tg_id])
@@ -78,18 +80,27 @@ def get_data(tg_id: int, value_name: str) -> int or str:
     return stats
 
 
-def global_top() -> list:
-    """
-    :return: list[tuple("tg_id", "tg_username", "hit_rate", "name")]
-    """
+class UsersData(NamedTuple):
+    tg_id: int
+    hit_rate: float
+    name: str
+
+
+def global_top() -> list[UsersData]:
     with sqlite3.connect(users_db) as db:
         cursor = db.cursor()
-        cursor.execute(f"""SELECT tg_id, tg_username, hit_rate, name
+        cursor.execute(f"""SELECT tg_id, hit_rate, name
                        FROM users_data
-                       WHERE tries >= 15 and is_public = 1
+                       WHERE tries >= 50 and is_public = 1
                        ORDER BY hit_rate DESC""")
-        total = cursor.fetchall()
-    return list(total)
+        data_from_database = cursor.fetchall()
+    top_players_list = list()
+    for user in data_from_database:
+        users_tg_id, users_hit_rate, users_name = user
+        top_players_list.append(UsersData(tg_id=users_tg_id,
+                                          hit_rate=users_hit_rate,
+                                          name=users_name))
+    return top_players_list
 
 
 # ----------------

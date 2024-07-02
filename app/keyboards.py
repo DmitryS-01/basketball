@@ -4,7 +4,9 @@ import dotenv
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
 
-basketball = ReplyKeyboardMarkup(keyboard=[
+# кнопка броска мяча и ее эволюция
+
+basketball_emoji_keyboard = ReplyKeyboardMarkup(keyboard=[
     [
         KeyboardButton(text='🏀')
     ]
@@ -13,6 +15,16 @@ basketball = ReplyKeyboardMarkup(keyboard=[
     input_field_placeholder='Отправь "🏀" для броска!'
 )
 
+basketball_emoji_cooldown_keyboard = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(text='Перезарядка...')
+    ]
+],
+    resize_keyboard=True,
+    input_field_placeholder='Подожди немного...'
+)
+
+# изменения профиля
 profile_editing = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text='Изменить имя',
@@ -45,12 +57,12 @@ profile_visibility_settings = InlineKeyboardMarkup(inline_keyboard=[
 ]
 )
 
+# кнопка связи с админом (используется в /help)
 dotenv.load_dotenv()
-admin_contact = InlineKeyboardMarkup(inline_keyboard=
+admin_contact = InlineKeyboardMarkup(inline_keyboard=[
     [
-        [
-            InlineKeyboardButton(text='Админ всемогущий 🙏👊🤝',
-                                 url=f'https://t.me/{os.getenv('ADMIN_USERNAME')}')
-        ]
+        InlineKeyboardButton(text='Админ всемогущий 🙏👊🤝',
+                             url=f'https://t.me/{os.getenv('ADMIN_USERNAME')}')
     ]
+]
 )
