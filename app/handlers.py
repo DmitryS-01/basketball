@@ -308,8 +308,8 @@ async def basketball_msg(message: Message, state: FSMContext):
             await message.react([ReactionTypeEmoji(emoji=random.choice(didnt_scored_emoji))])
 
         await state.clear()
-        await cooldown_msg.delete()
         await cmd_users_stats(message=message)
+        await cooldown_msg.delete()
     else:
         await message.reply(text='Это ты не ко мне, я по баскетболу 😎\n'
                                  'Отправь "🏀", чтобы совершить бросок!')
