@@ -1,18 +1,18 @@
 from aiogram import Bot, Dispatcher
-from app.handlers import router
+from app.handlers.admin_commands_handlers import router as admin_router
+from app.handlers.handlers import router
 
 import asyncio
 
 import logging
 
-import os
-import dotenv
+from app.config import BOT_TOKEN
 
 
 async def main() -> None:
-    dotenv.load_dotenv()
-    bot = Bot(os.getenv("BOT_TOKEN"))
+    bot = Bot(BOT_TOKEN)
     dp = Dispatcher()
+    dp.include_router(admin_router)
     dp.include_router(router)
 
     logging.basicConfig(level=logging.INFO)

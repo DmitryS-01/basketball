@@ -68,6 +68,16 @@ def update_data(tg_id: int, column_name: str, new_value: str or int) -> None:
 # ----------------------------
 
 
+# id всех пользователей
+def get_all_users_ids() -> list[int]:
+    with sqlite3.connect(users_db) as db:
+        cursor = db.cursor()
+        cursor.execute("""SELECT tg_id
+                       FROM users_data""")
+        ids = cursor.fetchall()
+    return [tg_id[0] for tg_id in ids]
+
+
 # данные пользователя
 def get_data(tg_id: int, column_name: str) -> int | str:
     with sqlite3.connect(users_db) as db:

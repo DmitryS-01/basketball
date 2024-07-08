@@ -13,7 +13,7 @@ import random
 from app.database.database_funcs import new_user, update_data, get_data, global_top
 from app.keyboards import (basketball_emoji_keyboard, basketball_emoji_cooldown_keyboard, profile_editing,
                            profile_visibility_settings, admin_contact)
-from app.FSM import ProfileEditing, IsShooting
+from app.states.players_states import ProfileEditing, IsShooting
 
 
 router = Router()

@@ -1,5 +1,4 @@
-import os
-import dotenv
+from app.config import ADMIN_ID
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
@@ -58,11 +57,10 @@ profile_visibility_settings = InlineKeyboardMarkup(inline_keyboard=[
 )
 
 # кнопка связи с админом (используется в /help)
-dotenv.load_dotenv()
 admin_contact = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text='Админ всемогущий 🙏👊🤝',
-                             url=f'https://t.me/{os.getenv('ADMIN_USERNAME')}')
+                             url=f'tg://user?id={ADMIN_ID}')
     ]
 ]
 )
